@@ -30,6 +30,7 @@ async function excelTravserse() {
             console.log(cell.value);
         });
     });
-
 }
 
+console.log("Via Function");
+excelTravserse();
