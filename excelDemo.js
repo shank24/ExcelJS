@@ -18,7 +18,7 @@ workBook.xlsx.readFile("/Users/shankykalra/Downloads/download.xlsx").then(functi
 
 //Way 2 Via async and await
 async function excelTravserse() {
-console.log("Via Function");
+    console.log("Via Function");
     const workBook = new ExcelJs.Workbook();
     //Read File
     await workBook.xlsx.readFile("/Users/shankykalra/Downloads/download.xlsx")
@@ -35,31 +35,37 @@ console.log("Via Function");
 
 
 //Getting Specific Cell Number and Value
- 
-let output ={row:1, col:1};
-let appleRow =0;
 
-async function excelGetCoordinates() {
-        const workBook = new ExcelJs.Workbook();
-        //Read File
-        await workBook.xlsx.readFile("/Users/shankykalra/Downloads/download.xlsx")
-        //Sheet
-        const worksheet = workBook.getWorksheet('Sheet1');
-        //Traversing Row and Cell
-        worksheet.eachRow((row, rowNumber) => {
-            row.eachCell((cell, collNumber) => {
-                if(cell.value === 'Banana'){
-                    output.row = rowNumber;
-                    output.col = collNumber;
-                }
-                
-            });
-        });
+async function writeExcelTest(searchText, replaceText, filePath) {
+    const workBook = new ExcelJs.Workbook();
+    //Read File
+    await workBook.xlsx.readFile(filePath)
+    //Sheet
+    const worksheet = workBook.getWorksheet('Sheet1');
+    //Traversing Row and Cell
+    const output = await readExcel(worksheet, searchText);
 
-        //Writing Specific Cell
-        const cellToWrite = worksheet.getCell(output.row,output.col);
-        cellToWrite.value = 'New Avocado';
-        await workBook.xlsx.writeFile("/Users/shankykalra/Downloads/download.xlsx");
-    }
+    //Writing Specific Cell
+    const cellToWrite = worksheet.getCell(output.row, output.col);
+    cellToWrite.value = replaceText;
+    await workBook.xlsx.writeFile(filePath);
+}
 
-    excelGetCoordinates();
+
+async function readExcel(worksheet, searchText) {
+    let output = { row: 1, col: 1 };
+
+    worksheet.eachRow((row, rowNumber) => {
+        row.eachCell((cell, collNumber) => {
+            if (cell.value === searchText) {
+                output.row = rowNumber;
+                output.col = collNumber;
+            }
+
+        })
+    })
+    return output;
+}
+
+
+writeExcelTest("Mango", "Coconut", "/Users/shankykalra/Downloads/download.xlsx");
