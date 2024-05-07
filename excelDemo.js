@@ -36,7 +36,7 @@ async function excelTravserse() {
 
 //Getting Specific Cell Number and Value
 
-async function writeExcelTest(searchText, replaceText, filePath) {
+async function writeExcelTest(searchText, replaceText, change, filePath) {
     const workBook = new ExcelJs.Workbook();
     //Read File
     await workBook.xlsx.readFile(filePath)
@@ -46,7 +46,7 @@ async function writeExcelTest(searchText, replaceText, filePath) {
     const output = await readExcel(worksheet, searchText);
 
     //Writing Specific Cell
-    const cellToWrite = worksheet.getCell(output.row, output.col);
+    const cellToWrite = worksheet.getCell(output.row, output.col+change.colChange);
     cellToWrite.value = replaceText;
     await workBook.xlsx.writeFile(filePath);
 }
@@ -68,4 +68,4 @@ async function readExcel(worksheet, searchText) {
 }
 
 
-writeExcelTest("Mango", "Coconut", "/Users/shankykalra/Downloads/download.xlsx");
+writeExcelTest("Coconut", "350",{rowChange:0, colChange:2}, "/Users/shankykalra/Downloads/download.xlsx");
